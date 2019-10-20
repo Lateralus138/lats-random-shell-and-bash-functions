@@ -76,7 +76,7 @@ function install_cursor(){
 # Convert rgb values to hex format
 # Usage: rgbtohex <Red Number> <Green Number> <Blue Number>
 # E.g.: rgbtohex 200 220 255 = c8dcff
-function rgbtohex(){ # V2
+function rgbtohex(){ # V2 : V3 will be refactored
 	local int count R G B
 	[ $# -gt 0 ] &&
 	for int in "$@"; do
