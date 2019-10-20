@@ -76,20 +76,20 @@ function install_cursor(){
 # Convert rgb values to hex format
 # Usage: rgbtohex <Red Number> <Green Number> <Blue Number>
 # E.g.: rgbtohex 200 220 255 = c8dcff
-function rgbtohex(){ # V5 final?
+function rgbtohex(){
 	local int count R G B
 	[ $# -gt 0 ] &&
 	for int in "$@"; do
 		count=$((count + 1))
 		[ "${int}" -eq "${int}" -a "${int}" -le 255 ] 2>/dev/null || return
 		if [ $count -eq 1 ]; then
-			[ $int -ge 16 ] && R=$(printf '%x' ${int}) || R="0${int}"
+			[ $int -ge 16 ] && R=$(printf '%x' ${int}) || R="0$(printf '%x' ${int})"
 		fi
 		if [ $count -eq 2 ]; then
-			[ $int -ge 16 ] && G=$(printf '%x' ${int}) || G="0${int}"
+			[ $int -ge 16 ] && G=$(printf '%x' ${int}) || G="0$(printf '%x' ${int})"
 		fi
 		if [ $count -eq 3 ]; then
-			[ $int -ge 16 ] && B=$(printf '%x' ${int}) || B="0${int}"
+			[ $int -ge 16 ] && B=$(printf '%x' ${int}) || B="0$(printf '%x' ${int})"
 		fi
 	done || return 
 	echo "${R}${G}${B}"
