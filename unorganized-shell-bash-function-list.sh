@@ -94,3 +94,22 @@ function rgbtohex(){
 	done || return 
 	echo "${R}${G}${B}"
 }
+# Rainbow Bash Function
+# Rainbow colorize input
+# Usage: rainbow <any stdin>
+# E.g.
+#	- rainbow this is some example text
+# 	- rainbow "$(cat some_file.txt)"
+# 	- rainbow "$(echo -e "This is text\non two lines")"
+function rainbow(){
+	local params="$*" count=0 int clrs
+	for int in {{91..96},{31..36}}; do
+		clrs+=("${int}")
+	done
+	for ((index=0;index<${#params};index++)); do
+		count=$((count + 1))
+		echo -en "\e[${clrs[$((count - 1))]}m${params:${index}:1}\e[0m"
+		[ $((count % 12)) -eq 0 ] && count=0
+	done	
+	echo
+}
