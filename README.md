@@ -1,5 +1,7 @@
 # Lats Random Shell &amp; Bash Functions
 
+<center>![Bash Logo](images/bash.png "Bash Logo")</center>
+
 Initial unorganized list of some of my shell/Bash functions&#46; More will be added &amp; I'll eventually organize various lists.
 
 This is by no means an exhaustive list of my functions&#59; just lists of random code that can be used universally in Bash & some Posix.
