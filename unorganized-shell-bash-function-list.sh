@@ -113,3 +113,37 @@ function rainbow(){
 	done	
 	echo
 }
+# all_spaces - replace any number of spaces with a
+# single <TAB> or character of your choice.
+# Useful for printing columns with commands like
+# 'cut' to get correct columns for output that isn't
+# formatted well.
+# E.g.
+#	- all_spaces $(ls --color=never) ;; or all_spaces `ls`
+#	- all_spaces `ps aux` | cut -f2 ;; get process PIDs
+function all_spaces(){
+        if [[ $# -gt 0 ]]; then
+                local itr rplc
+                for itr in "$@"; do
+                        if [[ "${itr}" =~ ^-[rR]:.|^--[rR][eE][pP][lL][aA][cC][eE]:. ]]; then
+                                rplc="$(echo "${itr}" | cut -d':' -f2)"
+                                shift
+                                break
+                        fi
+                done
+                [[ $# -eq 0 ]] && return
+                [[ -z "${rplc}" ]] && rplc="\t"
+                echo "$*" | sed -e "s/[[:space:]]\+/${rplc}/g"
+        fi
+}
+# Check if a pid exists
+# Dependent on my 'all_spaces' function
+# E.g.
+#	- pid_exists 1 && echo true
+#	- if pid_exists 1504; then echo true; fi
+pid_exists(){
+        [[ $# -gt 0 ]] &&
+        ([[ "$(echo $(all_spaces "$(ps aux)" | \
+                cut -f2))" == *" $1 "* ]] && \
+        return 0) || return 1
+}
