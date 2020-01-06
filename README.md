@@ -1,6 +1,6 @@
 # Lats Random Shell &amp; Bash Functions
 
-<center>![Bash Logo](images/bash.png "Bash Logo")</center>
+![Bash Logo](./images/bash.png =64x64 "Bash Logo")
 
 Initial unorganized list of some of my shell/Bash functions&#46; More will be added &amp; I'll eventually organize various lists.
 
