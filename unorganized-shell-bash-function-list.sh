@@ -147,3 +147,40 @@ pid_exists(){
                 cut -f2))" == *" $1 "* ]] && \
         return 0) || return 1
 }
+# watch_alt - alternate version of the
+# 'watch' command. Repeats your commands
+# in intervals (default 0.9 seconds) with
+# a few options to cancel on output change
+# and run verbosely or clear the screen.
+# watch_alt [OPTIONS] <COMMAND> ;; in any order
+# OPTIONS = -s<time>|-S<time>, -c|-C, -v|-V
+# E.g.
+#	- watch_alt -s3.5 -c 'ls .' # ls files in current 
+#								# directory every 3
+#								# seconds until a
+#								# file is added
+function watch_alt(){
+        if [[ $# -gt 0 ]]; then
+                local arg slp vrbs com lastComi chng 
+                for arg in "$@"; do
+                        [[ "${arg}" =~ ^-[sS][0-9]*?\.?[0-9]*$ ]] &&
+                        slp=${arg:2} && shift
+                        [[ "${arg}" =~ ^-[vV]$ ]] &&
+                        vrbs=1 && shift
+                        [[ "${arg}" =~ ^-[cC]$ ]] &&
+                        chng=1 && shift
+                done
+                lastCom=`eval $*`
+                while :;do
+                        com=`eval $*`
+                        eval $*
+                        [[ -n "${chng}" ]] &&
+                        [[ "${com}" != "${lastCom}" ]] &&
+                        return 0
+                        [[ -n "${slp}" ]] && sleep "${slp}"
+                        [[ -z "${vrbs}" ]] && clear
+                        lastCom="${com}"
+                done
+                return 0
+        fi && return 1
+}

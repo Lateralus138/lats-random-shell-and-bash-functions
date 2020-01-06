@@ -1,6 +1,8 @@
-# lats-random-shell-and-bash-functions
+# Lats Random Shell &amp; Bash Functions
 
-Initial unorganized list of some of my shell/Bash functions. More will be added &amp; I'll eventually organize various lists.
+Initial unorganized list of some of my shell/Bash functions&#46; More will be added &amp; I'll eventually organize various lists.
+
+This is by no means an exhaustive list of my functions&#59; just lists of random code that can be used universally in Bash & some Posix.
 
 ## All Code
 
