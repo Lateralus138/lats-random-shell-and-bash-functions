@@ -122,6 +122,29 @@ rainbow(){
 	done	
 	echo
 }
+# all_spaces - replace any number of spaces with a
+# single <TAB> or character of your choice.
+# Useful for printing columns with commands like
+# 'cut' to get correct columns for output that isn't
+# formatted well.
+# E.g.
+#	- all_spaces $(ls --color=never) ;; or all_spaces `ls`
+#	- all_spaces `ps aux` | cut -f2 ;; get process PIDs
+function all_spaces(){
+        if [[ $# -gt 0 ]]; then
+                local itr rplc
+                for itr in "$@"; do
+                        if [[ "${itr}" =~ ^-[rR]:.|^--[rR][eE][pP][lL][aA][cC][eE]:. ]]; then
+                                rplc="$(echo "${itr}" | cut -d':' -f2)"
+                                shift
+                                break
+                        fi
+                done
+                [[ $# -eq 0 ]] && return
+                [[ -z "${rplc}" ]] && rplc="\t"
+                echo "$*" | sed -e "s/[[:space:]]\+/${rplc}/g"
+        fi
+}
 # Check if a pid exists
 # Dependent on my 'all_spaces' function
 # E.g.
@@ -132,5 +155,42 @@ pid_exists(){
         ([[ "$(echo $(all_spaces "$(ps aux)" | \
                 cut -f2))" == *" $1 "* ]] && \
         return 0) || return 1
+}
+# watch_alt - alternate version of the
+# 'watch' command. Repeats your commands
+# in intervals (default 0.9 seconds) with
+# a few options to cancel on output change
+# and run verbosely or clear the screen.
+# watch_alt [OPTIONS] <COMMAND> ;; in any order
+# OPTIONS = -s<time>|-S<time>, -c|-C, -v|-V
+# E.g.
+#	- watch_alt -s3.5 -c 'ls .' # ls files in current 
+#								# directory every 3
+#								# seconds until a
+#								# file is added
+function watch_alt(){
+        if [[ $# -gt 0 ]]; then
+                local arg slp vrbs com lastComi chng 
+                for arg in "$@"; do
+                        [[ "${arg}" =~ ^-[sS][0-9]*?\.?[0-9]*$ ]] &&
+                        slp=${arg:2} && shift
+                        [[ "${arg}" =~ ^-[vV]$ ]] &&
+                        vrbs=1 && shift
+                        [[ "${arg}" =~ ^-[cC]$ ]] &&
+                        chng=1 && shift
+                done
+                lastCom=`eval $*`
+                while :;do
+                        com=`eval $*`
+                        eval $*
+                        [[ -n "${chng}" ]] &&
+                        [[ "${com}" != "${lastCom}" ]] &&
+                        return 0
+                        [[ -n "${slp}" ]] && sleep "${slp}"
+                        [[ -z "${vrbs}" ]] && clear
+                        lastCom="${com}"
+                done
+                return 0
+        fi && return 1
 }
 ```
